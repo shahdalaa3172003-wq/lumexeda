@@ -1,7 +1,3 @@
 {
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/drive/thumb", "destination": "/api/thumb" },
-    { "source": "/api/drive", "destination": "/api/drive" }
-  ]
+  "cleanUrls": true
 }
