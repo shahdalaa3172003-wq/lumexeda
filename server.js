@@ -114,10 +114,66 @@ function driveRequest(folderId, pageToken, callback) {
   req.setTimeout(10000, function() { req.abort(); callback(new Error('Drive API request timed out')); });
 }
 
+function fetchPublicFolderFallback(callback) {
+  function fetchFolderIds(folderId, cb) {
+    var req = https.get('https://drive.google.com/drive/folders/' + folderId, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+    }, function(res) {
+      var body = '';
+      res.on('data', function(c) { body += c; });
+      res.on('end', function() {
+        var matches = body.match(/1[a-zA-Z0-9_\-]{32}/g) || [];
+        var unique = Array.from(new Set(matches));
+        cb(null, unique);
+      });
+    });
+    req.on('error', function(e) { cb(e, []); });
+  }
+
+  var excludedSet = new Set(EXCLUDED_FOLDERS);
+  var pending = EXCLUDED_FOLDERS.length;
+
+  if (pending === 0) {
+    getFolder();
+  } else {
+    EXCLUDED_FOLDERS.forEach(function(fId) {
+      fetchFolderIds(fId, function(err, ids) {
+        ids.forEach(function(id) { excludedSet.add(id); });
+        pending--;
+        if (pending === 0) getFolder();
+      });
+    });
+  }
+
+  function getFolder() {
+    fetchFolderIds(FOLDER_ID, function(err, mainIds) {
+      if (err) return callback(err);
+      var validImages = [];
+      mainIds.forEach(function(id) {
+        if (!excludedSet.has(id)) {
+          validImages.push({ id: id, name: 'Portfolio Work' });
+        }
+      });
+      callback(null, validImages);
+    });
+  }
+}
+
 function fetchAllDriveFiles(callback) {
   // Return cached data if fresh
   if (driveCache.data && (Date.now() - driveCache.ts) < CACHE_TTL_MS) {
     return callback(null, driveCache.data);
+  }
+
+  if (!API_KEY) {
+    fetchPublicFolderFallback(function(err, images) {
+      if (!err && images) {
+        driveCache.data = images;
+        driveCache.ts = Date.now();
+      }
+      callback(err, images);
+    });
+    return;
   }
 
   var allImages = [];
@@ -145,14 +201,21 @@ function fetchAllDriveFiles(callback) {
     function fetchPage(token) {
       if (hasError) return;
       driveRequest(currentFolder, token, function(err, data) {
-        if (hasError) return;
-        if (err) {
-          hasError = err;
-          return callback(err);
+        if (hasError) {
+          return;
         }
-        if (data.error) {
-          hasError = new Error(data.error.message);
-          return callback(hasError);
+        if (err || (data && data.error)) {
+          // Fallback to public folder scraper if API key fails
+          fetchPublicFolderFallback(function(fallbackErr, fallbackImages) {
+            if (!fallbackErr && fallbackImages) {
+              driveCache.data = fallbackImages;
+              driveCache.ts = Date.now();
+              return callback(null, fallbackImages);
+            }
+            hasError = err || new Error(data.error.message);
+            return callback(hasError);
+          });
+          return;
         }
 
         var files = data.files || [];
