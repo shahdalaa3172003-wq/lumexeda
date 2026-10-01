@@ -47,6 +47,18 @@ export default async function handler(req, res) {
     return allImages;
   }
 
+  // Helper: check if candidate fileId points to a real image on Google CDN
+  async function isRealImageId(fileId) {
+    try {
+      const res = await fetch(`https://lh3.googleusercontent.com/d/${fileId}=w800`, {
+        headers: { 'User-Agent': 'Mozilla/5.0' }
+      });
+      return res.status === 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // Helper: fetch files via public folder scraping fallback
   async function fetchPublicFolderFallback() {
     const fetchFolderIds = async (folderId) => {
@@ -76,7 +88,15 @@ export default async function handler(req, res) {
     const mainFolderIds = await fetchFolderIds(FOLDER_ID);
     const candidates = mainFolderIds.filter(id => !excludedSet.has(id));
 
-    return candidates.map(id => ({ id, name: 'Portfolio Work' }));
+    // Verify candidate IDs in parallel
+    const verifications = await Promise.all(
+      candidates.map(async id => {
+        const valid = await isRealImageId(id);
+        return valid ? { id, name: 'Portfolio Work' } : null;
+      })
+    );
+
+    return verifications.filter(Boolean);
   }
 
   try {
