@@ -1196,7 +1196,6 @@
 
     function startRotation(){
       if(rotTimer) clearInterval(rotTimer);
-      advance();
       rotTimer = setInterval(function(){
         var r = pContainer.getBoundingClientRect();
         if(r.top < window.innerHeight && r.bottom > 0) advance();
@@ -1217,7 +1216,20 @@
       if(!images || !images.length){ showStatus('No images found in Drive folder.'); return; }
       portData = images;
       hideStatus();
-      if(!started) startRotation();
+      if(!started){
+        // Render first set directly into active pgA so images display immediately as they load
+        var n = slotCount();
+        var set = [];
+        for(var i = 0; i < n; i++){
+          if(portIdx >= portData.length) portIdx = 0;
+          set.push(portData[portIdx++]);
+        }
+        buildGroup(pgA, set);
+        pgA.classList.add('active');
+        pgB.classList.remove('active');
+        activePg = 'a';
+        startRotation();
+      }
     }
 
     function fetchDrive(silent){
