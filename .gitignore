@@ -1,0 +1,6 @@
+.env
+.env*.local
+.img-cache/
+node_modules/
+.vercel/
+*.log
