@@ -47,23 +47,14 @@ export default async function handler(req, res) {
     return allImages;
   }
 
-  // Helper: check if fileId points to a real image on Google CDN
-  async function isRealImageId(fileId) {
-    try {
-      const res = await fetch(`https://lh3.googleusercontent.com/d/${fileId}=w800`, { method: 'HEAD' });
-      return res.ok;
-    } catch (e) {
-      return false;
-    }
-  }
-
   // Helper: fetch files via public folder scraping fallback
   async function fetchPublicFolderFallback() {
     const fetchFolderIds = async (folderId) => {
       try {
-        const response = await fetch(`https://drive.google.com/drive/folders/${folderId}`, {
+        const response = await fetch(`https://drive.google.com/drive/folders/${folderId}?usp=sharing`, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
           }
         });
         const text = await response.text();
@@ -85,15 +76,7 @@ export default async function handler(req, res) {
     const mainFolderIds = await fetchFolderIds(FOLDER_ID);
     const candidates = mainFolderIds.filter(id => !excludedSet.has(id));
 
-    // Verify candidate IDs in parallel
-    const verifications = await Promise.all(
-      candidates.map(async id => {
-        const valid = await isRealImageId(id);
-        return valid ? { id, name: 'Portfolio Work' } : null;
-      })
-    );
-
-    return verifications.filter(Boolean);
+    return candidates.map(id => ({ id, name: 'Portfolio Work' }));
   }
 
   try {
