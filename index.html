@@ -1092,9 +1092,28 @@
     if(e.key==='Escape')close(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
   });
 
-  // PORTFOLIO SHOWCASE - powered by /api/drive
+  // PORTFOLIO SHOWCASE - Powered by Local Media Assets
   (function(){
-    var portData   = [];
+    var LOCAL_IMAGES = [
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.15.50 PM (2).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.15.50 PM (1).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.15.50 PM.jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.46 PM.jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.46 PM (2).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.46 PM (1).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.45 PM.jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.45 PM (4).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.45 PM (3).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.45 PM (2).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.45 PM (1).jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 11.13.44 PM.jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 10.10.15 PM.jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 10.10.14 PM.jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 10.10.11 PM.jpeg",
+      "posts-carousels/WhatsApp Image 2026-10-01 at 10.10.10 PM.jpeg"
+    ];
+
+    var portData   = LOCAL_IMAGES.map(function(src){ return { src: src }; });
     var portIdx    = 0;
     var activePg   = 'a';
     var rotTimer   = null;
@@ -1105,7 +1124,6 @@
     var pContainer = document.getElementById('portfolio-showcase');
     var CFG        = window.LUMEXEDA_CONFIG || {};
     var ROT_MS     = CFG.ROTATION_INTERVAL_MS || 3500;
-    var REF_MS     = CFG.REFRESH_INTERVAL_MS  || 300000;
 
     function slotCount(){
       if(window.innerWidth <= 600) return 2;
@@ -1113,8 +1131,8 @@
       return 4;
     }
 
-    function imgSrc(id){
-      return '/api/drive/thumb?id=' + encodeURIComponent(id);
+    function imgSrc(file){
+      return encodeURI(file.src);
     }
 
     function buildGroup(el, files){
@@ -1123,8 +1141,8 @@
         var wrap = document.createElement('div');
         wrap.className = 'port-img-wrap';
         var img  = document.createElement('img');
-        img.src  = imgSrc(file.id);
-        img.alt  = file.name || 'Portfolio Work';
+        img.src  = imgSrc(file);
+        img.alt  = 'Portfolio Work';
         wrap.appendChild(img);
         el.appendChild(wrap);
       });
@@ -1173,25 +1191,14 @@
       if(total === 0){ finishAdvance(); return; }
 
       imgs.forEach(function(img){
-        var retried = false;
-        img.onerror = function(){
-          if(!retried){
-            retried = true;
-            setTimeout(function(){
-              img.src = img.src + '&retry=' + Date.now();
-            }, 1000);
-          } else {
-            trySwap();
-          }
-        };
-        img.onload = function(){
+        img.onload = img.onerror = function(){
           trySwap();
         };
         if(img.complete && img.naturalWidth !== 0){
           trySwap();
         }
       });
-      setTimeout(function(){ finishAdvance(); }, 15000);
+      setTimeout(function(){ finishAdvance(); }, 5000);
     }
 
     function startRotation(){
@@ -1212,43 +1219,22 @@
       pStatus.style.display = 'none';
     }
 
-    function applyData(images){
-      if(!images || !images.length){ showStatus('No images found in Drive folder.'); return; }
-      portData = images;
+    function initShowcase(){
       hideStatus();
-      if(!started){
-        // Render first set directly into active pgA so images display immediately as they load
-        var n = slotCount();
-        var set = [];
-        for(var i = 0; i < n; i++){
-          if(portIdx >= portData.length) portIdx = 0;
-          set.push(portData[portIdx++]);
-        }
-        buildGroup(pgA, set);
-        pgA.classList.add('active');
-        pgB.classList.remove('active');
-        activePg = 'a';
-        startRotation();
+      var n = slotCount();
+      var set = [];
+      for(var i = 0; i < n; i++){
+        if(portIdx >= portData.length) portIdx = 0;
+        set.push(portData[portIdx++]);
       }
+      buildGroup(pgA, set);
+      pgA.classList.add('active');
+      pgB.classList.remove('active');
+      activePg = 'a';
+      startRotation();
     }
 
-    function fetchDrive(silent){
-      fetch('/api/drive')
-        .then(function(r){
-          if(!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        })
-        .then(function(data){
-          if(data.error){ if(!silent) showStatus('Drive: ' + data.error); return; }
-          applyData(data.images || []);
-        })
-        .catch(function(){
-          if(!silent) showStatus('Portfolio currently unavailable');
-        });
-    }
-
-    fetchDrive(false);
-    setInterval(function(){ fetchDrive(true); }, REF_MS);
+    initShowcase();
   }());
 
 })();
