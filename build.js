@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 console.log('Building production bundle for Vercel...');
@@ -53,7 +53,7 @@ const dynamicDirs = {
   'social-images': 'social-media-designs'
 };
 
-for (const [apiEndpoint, folder]] of Object.entries(dynamicDirs)) {
+for (const [apiEndpoint, folder] of Object.entries(dynamicDirs)) {
   const srcFolder = path.join(__dirname, folder);
   const destFolder = path.join(distDir, folder);
   let imagesList = [];
@@ -62,8 +62,7 @@ for (const [apiEndpoint, folder]] of Object.entries(dynamicDirs)) {
   }
   
   // Write the JSON response that the frontend expects
-  // Vercel with cleanUrls might serve .json files without extension, but we'll also write it exactly as the endpoint name just in case, or just modify scripts.js to fetch the .json!
-  fs.writeFileSync(path.join(apiDir, apiEndpoint + '.json'), JSON.stringify(imagesList));
+  fs.writeFileSync(path.join(apiDir, apiEndpoint + '.json'), JSON.stringify({ images: imagesList }));
 }
 
 console.log('✅ Build succeeded! All production assets copied to dist/');
