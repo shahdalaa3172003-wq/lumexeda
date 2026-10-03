@@ -8,7 +8,7 @@ const distDir = path.join(__dirname, 'dist');
 if (!fs.existsSync(distDir)) fs.mkdirSync(distDir, { recursive: true });
 
 // Copy root files
-const filesToCopy = ['index.html', 'config.js', 'styles.css', 'scripts.js', 'hero-bg.jpeg', 'Screenshot 2026-10-01 222927.png', 'Screenshot 2026-10-01 223735.png', 'Screenshot 2026-10-01 223946.png'];
+const filesToCopy = ['index.html', 'config.js', 'styles.css', 'scripts.js', 'hero-bg.jpeg', 'auticare-preview.png', 'shahd-preview.png', 'lumexeda-preview.png'];
 filesToCopy.forEach(file => {
   if (fs.existsSync(path.join(__dirname, file))) {
     fs.copyFileSync(path.join(__dirname, file), path.join(distDir, file));
