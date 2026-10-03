@@ -307,7 +307,7 @@ var server = http.createServer(function(req, res) {
     const allFiles = getFilesRecursively(absPath);
     const images = allFiles
       .filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f))
-      .map(f => '/' + targetFolder + '/' + path.relative(absPath, f).replace(/\\\\/g, '/'));
+      .map(f => '/' + targetFolder + '/' + path.relative(absPath, f).replace(/\\/g, '/'));
       
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ images }));
