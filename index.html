@@ -12,22 +12,42 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=8?v=6" />
 </head>
 <body>
+  
 
   <div class="custom-cursor">
     <span class="cursor-text"></span>
   </div>
 
   <nav class="main-nav">
-    <div class="nav-brand">LUMEXEDA</div>
+    <div class="brandmark" style="display:flex; align-items:center; gap:10px;">
+      <div class="cute-camera">
+        <svg viewBox="0 0 100 100" aria-hidden="true" width="100%" height="100%">
+          <rect x="15" y="30" width="70" height="50" rx="8" fill="var(--navy)" />
+          <path d="M35 30 L40 20 H60 L65 30" fill="var(--navy)" />
+          <circle cx="50" cy="25" r="4" fill="#ffffff" class="flash-bulb" />
+          <circle cx="50" cy="55" r="16" fill="var(--steel)" />
+          <circle cx="50" cy="55" r="12" fill="#0A1330" />
+          <circle cx="28" cy="48" r="4" fill="#ffffff" class="cam-eye-left" />
+          <path d="M24 48 Q28 44 32 48" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" class="cam-wink-left" style="opacity:0;" />
+          <circle cx="72" cy="48" r="4" fill="#ffffff" class="cam-eye-right" />
+          <path d="M45 74 Q50 78 55 74" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" class="cam-mouth" />
+        </svg>
+        <div class="camera-flash-fx"></div>
+      </div>
+      <div class="nav-brand">
+        <span class="logo-lume">lume</span><span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-star">*</span></span><span class="logo-eda">eda</span>
+      </div>
+    </div>
     <div class="nav-links">
       <a href="#work" class="nav-link" data-magnetic>WORK</a>
       <a href="#creative" class="nav-link" data-magnetic>CREATIVE</a>
       <a href="#digital" class="nav-link" data-magnetic>DIGITAL</a>
       <a href="#studio" class="nav-link" data-magnetic>STUDIO</a>
       <a href="#about" class="nav-link" data-magnetic>ABOUT</a>
+      <a href="https://maps.app.goo.gl/dqaSqiDkCaVaj1jt9" target="_blank" class="nav-link" data-magnetic>STUDIO LOCATION</a>
     </div>
     <div class="nav-cta">
       <a href="https://wa.me/201140859638" class="btn btn-nav" data-magnetic>START A PROJECT</a>
@@ -38,17 +58,23 @@
     <!-- HERO SECTION -->
     <section class="hero" id="hero">
       <div class="hero-bg-wrapper">
-        <img src="WhatsApp Image 2026-10-02 at 5.25.41 PM.jpeg" alt="Hero Background" class="hero-bg" id="hero-img" />
+        <img src="hero-bg.jpeg" alt="Hero Background" class="hero-bg" id="hero-img" />
         <div class="hero-overlay"></div>
       </div>
       
       <div class="hero-content">
         <div class="hero-eyebrow" data-reveal>
-          <span class="asterisk">âœ¦</span> CREATIVE &amp; TECHNOLOGY STUDIO
+          <span class="asterisk">?</span> CREATIVE &amp; TECHNOLOGY STUDIO
         </div>
         <h1 class="hero-title">
-          <span class="title-line"><span class="title-inner">YOUR BRAND.</span></span>
-          <span class="title-line"><span class="title-inner">OUR <em class="highlight">CREATIVITY.</em></span></span>
+          <div class="hero-state state-1">
+            <span class="title-line"><span class="title-inner">WE ARE</span></span>
+            <span class="title-line"><span class="title-inner"><em class="highlight">LUMEXEDA</em></span></span>
+          </div>
+          <div class="hero-state state-2">
+            <span class="title-line"><span class="title-inner">YOUR BRAND.</span></span>
+            <span class="title-line"><span class="title-inner">OUR <em class="highlight">CREATIVITY.</em></span></span>
+          </div>
         </h1>
         
         <div class="hero-bottom">
@@ -60,27 +86,19 @@
 
     <!-- SHOWREEL SECTION -->
     <section class="showreel" id="work">
-      <div class="section-container">
-        <h2 class="section-title" data-reveal>THIS IS WHAT WE CREATE.</h2>
-        <div class="showreel-wrapper" data-cursor="PLAY" onclick="window.open('https://drive.google.com/drive/folders/1xPA2BPpMxkdV_t_3fJOke3bxpVu8gnLv', '_blank')">
-          <div class="showreel-video-container">
-            <!-- Using an iframe from existing reels as a showreel representative -->
-            <iframe src="https://drive.google.com/file/d/1P00BCHUWwJRDPoudZ1vp0MoRCU91l0Ls/preview" allow="autoplay" loading="lazy" class="showreel-iframe"></iframe>
-            <div class="showreel-overlay"></div>
-          </div>
-          <div class="showreel-text">
-            <span>PLAY SHOWREEL</span>
-            <span>2026</span>
-          </div>
-        </div>
-      </div>
-    </section>
+  <div class="section-container">
+    <h2 class="section-title showcase-title" data-reveal>THIS IS WHAT WE CREATE.</h2>
+    <div class="live-showcase-grid" id="liveShowcaseGrid">
+      <!-- Dynamic showcase items injected via JS -->
+    </div>
+  </div>
+</section>
 
     <!-- SELECTED WORK (Horizontal Scroll) -->
     <section class="selected-work" id="creative">
       <div class="section-header">
         <div class="kicker">Selected Work</div>
-        <h2 class="huge-title">CINEMATIC<br/>REELS.</h2>
+        <h2 class="huge-title showcase-title">CINEMATIC REELS.</h2>
       </div>
       <div class="horizontal-scroll-wrapper">
         <div class="horizontal-container">
@@ -105,6 +123,26 @@
             </div>
           </div>
 
+          <div class="project-card large" data-cursor="PLAY">
+            <div class="project-video">
+              <iframe src="https://drive.google.com/file/d/1p7hinhRi32lkLywwOIq_7SViyTMnj6Mj/preview" allow="autoplay" loading="lazy"></iframe>
+            </div>
+            <div class="project-info">
+              <h3>Dr. Eslam Clinic</h3>
+              <p>Cosmetic Dentistry</p>
+            </div>
+          </div>
+
+          <div class="project-card vertical" data-cursor="PLAY">
+            <div class="project-video">
+              <iframe src="https://drive.google.com/file/d/1Y0VMwQ5dRZpd60CN9WgrQGEk61La1BJC/preview" allow="autoplay" loading="lazy"></iframe>
+            </div>
+            <div class="project-info">
+              <h3>Ahram Clinic</h3>
+              <p>Specialized Healthcare</p>
+            </div>
+          </div>
+
           <div class="project-card wide" data-cursor="PLAY">
             <div class="project-video">
               <iframe src="https://drive.google.com/file/d/1Wn38jk8pbjtwhMVBq_fWugufoKQvo8Fl/preview" allow="autoplay" loading="lazy"></iframe>
@@ -117,7 +155,7 @@
 
           <div class="project-card more-card" data-cursor="VIEW">
             <a href="https://drive.google.com/drive/folders/1xPA2BPpMxkdV_t_3fJOke3bxpVu8gnLv" target="_blank" class="more-content">
-              <span class="asterisk big-asterisk">âœ¦</span>
+              <span class="asterisk big-asterisk">?</span>
               <h3>VIEW ALL REELS</h3>
               <p>Explore the full archive.</p>
             </a>
@@ -131,33 +169,33 @@
     <section class="content-strategy">
       <div class="section-container">
         <div class="kicker">Strategy</div>
-        <h2 class="section-title">CONTENT STRATEGY ARCHIVE</h2>
+        <h2 class="section-title showcase-title">CONTENT STRATEGY ARCHIVE</h2>
         
         <div class="strategy-list">
           <a href="https://drive.google.com/file/d/1YmOTKprSI132qJfoxvkp2nujUMBGVq56/view" target="_blank" class="strategy-item" data-cursor="OPEN">
             <div class="strategy-name">Dr. Mena</div>
             <div class="strategy-type">Content Plan</div>
-            <div class="strategy-arrow">â†—</div>
+            <div class="strategy-arrow">?</div>
           </a>
           <a href="https://drive.google.com/file/d/1KNLYfEc48OwuQD4vneCrcyIHQORT2evV/view" target="_blank" class="strategy-item" data-cursor="OPEN">
             <div class="strategy-name">Lucin Clinic</div>
             <div class="strategy-type">Content Plan</div>
-            <div class="strategy-arrow">â†—</div>
+            <div class="strategy-arrow">?</div>
           </a>
           <a href="https://drive.google.com/file/d/1Oh8812MhRZpWFm8LHsOzQo3U0QGqivhl/view" target="_blank" class="strategy-item" data-cursor="OPEN">
             <div class="strategy-name">Mai Abdelhafez Innovations</div>
             <div class="strategy-type">Content Plan</div>
-            <div class="strategy-arrow">â†—</div>
+            <div class="strategy-arrow">?</div>
           </a>
           <a href="https://drive.google.com/file/d/1m2MEYWQXOxRKUS8Dk6OQW-N8DCYJdxJE/view" target="_blank" class="strategy-item" data-cursor="OPEN">
             <div class="strategy-name">Ahmed Faraag</div>
             <div class="strategy-type">Content Plan</div>
-            <div class="strategy-arrow">â†—</div>
+            <div class="strategy-arrow">?</div>
           </a>
           <a href="https://drive.google.com/file/d/1gg10b65_Kx6CGFE7zxct4XmU5m__dDrJ/view" target="_blank" class="strategy-item" data-cursor="OPEN">
             <div class="strategy-name">Sales Reel Scripts</div>
             <div class="strategy-type">Interior Designer</div>
-            <div class="strategy-arrow">â†—</div>
+            <div class="strategy-arrow">?</div>
           </a>
         </div>
       </div>
@@ -167,18 +205,18 @@
     <div class="marquee-section">
       <div class="marquee" data-speed="1">
         <div class="marquee-inner">
-          <span>CREATIVE Â· MEDIA Â· TECHNOLOGY Â· </span>
-          <span>CREATIVE Â· MEDIA Â· TECHNOLOGY Â· </span>
-          <span>CREATIVE Â· MEDIA Â· TECHNOLOGY Â· </span>
-          <span>CREATIVE Â· MEDIA Â· TECHNOLOGY Â· </span>
+          <span>CREATIVE · MEDIA · TECHNOLOGY · </span>
+          <span>CREATIVE · MEDIA · TECHNOLOGY · </span>
+          <span>CREATIVE · MEDIA · TECHNOLOGY · </span>
+          <span>CREATIVE · MEDIA · TECHNOLOGY · </span>
         </div>
       </div>
       <div class="marquee" data-speed="-1">
         <div class="marquee-inner outline">
-          <span>REELS Â· CONTENT Â· DIGITAL Â· STUDIO Â· </span>
-          <span>REELS Â· CONTENT Â· DIGITAL Â· STUDIO Â· </span>
-          <span>REELS Â· CONTENT Â· DIGITAL Â· STUDIO Â· </span>
-          <span>REELS Â· CONTENT Â· DIGITAL Â· STUDIO Â· </span>
+          <span>REELS · CONTENT · DIGITAL · STUDIO · </span>
+          <span>REELS · CONTENT · DIGITAL · STUDIO · </span>
+          <span>REELS · CONTENT · DIGITAL · STUDIO · </span>
+          <span>REELS · CONTENT · DIGITAL · STUDIO · </span>
         </div>
       </div>
     </div>
@@ -187,7 +225,7 @@
     <section class="technology" id="digital">
       <div class="section-container">
         <div class="kicker">Digital Products</div>
-        <h2 class="section-title">TECHNOLOGY WORK</h2>
+        <h2 class="section-title showcase-title">TECHNOLOGY WORK</h2>
         
         <div class="tech-grid">
           
@@ -210,7 +248,7 @@
               <div class="tech-stack">
                 <span>React</span><span>AI</span><span>Web</span>
               </div>
-              <a href="https://auticare-ruddy.vercel.app/" target="_blank" class="tech-link">VIEW PROJECT â†—</a>
+              <a href="https://auticare-ruddy.vercel.app/" target="_blank" class="tech-link">VIEW PROJECT ?</a>
             </div>
           </div>
 
@@ -233,7 +271,7 @@
               <div class="tech-stack">
                 <span>HTML</span><span>CSS</span><span>JS</span>
               </div>
-              <a href="https://portfolio-hazel-three-99.vercel.app/" target="_blank" class="tech-link">VIEW PROJECT â†—</a>
+              <a href="https://portfolio-hazel-three-99.vercel.app/" target="_blank" class="tech-link">VIEW PROJECT ?</a>
             </div>
           </div>
 
@@ -256,7 +294,7 @@
               <div class="tech-stack">
                 <span>Frontend</span><span>Motion</span><span>UX</span>
               </div>
-              <a href="https://lumexeda.vercel.app/" target="_blank" class="tech-link">VIEW PROJECT â†—</a>
+              <a href="https://lumexeda.vercel.app/" target="_blank" class="tech-link">VIEW PROJECT ?</a>
             </div>
           </div>
 
@@ -264,18 +302,23 @@
       </div>
     </section>
 
-    <!-- STUDIO FILM STRIP -->
-    <section class="studio" id="studio">
-      <div class="kicker centered">Studio</div>
-      <h2 class="huge-title centered">COME INSIDE WHERE THE WORK IS MADE.</h2>
-      
-      <div class="film-strip-wrapper">
-        <div class="film-strip">
-          <div class="film-item"><div class="film-content">Behind The Scenes 1</div></div>
-          <div class="film-item"><div class="film-content">Behind The Scenes 2</div></div>
-          <div class="film-item"><div class="film-content">Behind The Scenes 3</div></div>
-          <div class="film-item"><div class="film-content">Behind The Scenes 4</div></div>
-          <div class="film-item"><div class="film-content">Behind The Scenes 5</div></div>
+
+    <!-- STUDIO SECTION -->
+    <section class="showreel" id="studio">
+      <div class="section-container">
+        <h2 class="section-title showcase-title" data-reveal>THE STUDIO</h2>
+        <div class="live-showcase-grid four-col" id="liveStudioGrid">
+          <!-- Dynamic studio items injected via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL MEDIA DESIGNS -->
+    <section class="showreel" id="social-section">
+      <div class="section-container">
+        <h2 class="section-title showcase-title" data-reveal>SOCIAL MEDIA DESIGNS</h2>
+        <div class="live-showcase-grid four-col" id="liveSocialGrid">
+          <!-- Dynamic social media items injected via JS -->
         </div>
       </div>
     </section>
@@ -284,7 +327,7 @@
     <section class="about-services" id="about">
       <div class="section-container">
         <div class="about-statement" data-reveal>
-          <h2>We build premium presence that connects and converts.</h2>
+          <h2 class="showcase-title">We build premium presence that connects and converts.</h2>
           <p>Strategy, production and management under one roof.</p>
         </div>
         
@@ -320,8 +363,16 @@
     <section class="final-cta">
       <div class="cta-content">
         <div class="cta-kicker">HAVE A PROJECT IN MIND?</div>
-        <h2 class="cta-huge">LETâ€™S CREATE SOMETHING<br/>WORTH SEEING.</h2>
-        <a href="https://wa.me/201140859638" class="btn btn-giant btn-magnetic" data-cursor="START">START A PROJECT â†—</a>
+        <div class="cta-animated-wrapper">
+          <h2 class="cta-huge">LET'S CREATE SOMETHING<br/>WORTH SEEING.</h2>
+          <svg class="wink-sticker" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4">
+            <circle cx="50" cy="50" r="45" fill="var(--paper)"/>
+            <circle cx="35" cy="40" r="6" fill="currentColor"/>
+            <path class="wink-eye" d="M60 40 Q65 35 70 40" stroke-linecap="round"/>
+            <path d="M35 65 Q50 80 65 65" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <a href="https://wa.me/201140859638" class="btn btn-giant btn-magnetic" data-cursor="START">START A PROJECT ?</a>
       </div>
     </section>
 
@@ -330,7 +381,7 @@
   <footer class="footer">
     <div class="footer-top">
       <div class="footer-brand">LUMEXEDA</div>
-      <div class="footer-tagline">CREATIVE Â· MEDIA Â· TECHNOLOGY</div>
+      <div class="footer-tagline">CREATIVE · MEDIA · TECHNOLOGY</div>
     </div>
     <div class="footer-bottom">
       <div class="footer-nav">
@@ -341,11 +392,14 @@
         <a href="#about">ABOUT</a>
       </div>
       <div class="footer-socials">
+        <a href="https://maps.app.goo.gl/dqaSqiDkCaVaj1jt9" target="_blank" style="display:inline-flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Studio Location
+        </a>
         <a href="https://wa.me/201140859638" target="_blank">WhatsApp</a>
         <a href="https://www.instagram.com/lumexeda?stkn=MTBqbzBwaGN3cm9xMQ==" target="_blank">Instagram</a>
         <a href="https://www.tiktok.com/@lumexeda1?_r=1&_t=ZS-9A5lLGovnCz" target="_blank">TikTok</a>
       </div>
-      <div class="footer-copy">Â© 2026 Lumexeda. All rights reserved.</div>
+      <div class="footer-copy">© 2026 Lumexeda. All rights reserved.</div>
     </div>
   </footer>
 
@@ -353,6 +407,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
-  <script src="scripts.js"></script>
+  <script src="scripts.js?v=9"></script>
 </body>
 </html>

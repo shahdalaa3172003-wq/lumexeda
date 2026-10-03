@@ -50,3 +50,5 @@ console.log('✅ Build succeeded! All production assets copied to dist/');
 
 if (fs.existsSync(path.join(__dirname, 'styles.css'))) { fs.copyFileSync(path.join(__dirname, 'styles.css'), path.join(distDir, 'styles.css')); }
 if (fs.existsSync(path.join(__dirname, 'scripts.js'))) { fs.copyFileSync(path.join(__dirname, 'scripts.js'), path.join(distDir, 'scripts.js')); }
+
+if (fs.existsSync(path.join(__dirname, 'hero-bg.jpeg'))) { fs.copyFileSync(path.join(__dirname, 'hero-bg.jpeg'), path.join(distDir, 'hero-bg.jpeg')); }

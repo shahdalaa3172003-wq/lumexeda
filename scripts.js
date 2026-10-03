@@ -18,11 +18,61 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   requestAnimationFrame(raf);
 
+    const mainNav = document.querySelector('.main-nav');
+  lenis.on('scroll', (e) => {
+    let currentScroll = e.scroll;
+    if (currentScroll <= 50) { 
+      mainNav.classList.remove('nav-hidden'); 
+    }
+    else if (e.direction === 1) { 
+      mainNav.classList.add('nav-hidden'); 
+    }
+    else if (e.direction === -1) { 
+      mainNav.classList.remove('nav-hidden'); 
+    }
+  });
+
   // Sync GSAP ScrollTrigger with Lenis
   gsap.registerPlugin(ScrollTrigger);
   
   // Custom Cursor
-  const cursor = document.querySelector('.custom-cursor');
+    // Distribute Ambient Stickers across sections
+  const sections = document.querySelectorAll('section');
+  const stickerHTMLs = [
+    `<svg class="ambient-icon float-1" style="top: 15%; left: 8%;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>`,
+    `<svg class="ambient-icon float-2" style="top: 35%; right: 10%;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>`,
+    `<svg class="ambient-icon float-3" style="top: 60%; left: 12%;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`,
+    `<svg class="ambient-icon float-4" style="top: 80%; right: 15%;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`
+  ];
+  
+  sections.forEach((section, i) => {
+    // Only add to large sections
+    if (section.classList.contains('marquee-section') || section.classList.contains('final-cta')) return;
+    
+    // Add position relative to section if not already
+    const computed = window.getComputedStyle(section);
+    if (computed.position === 'static') {
+      section.style.position = 'relative';
+    }
+    
+    const wrapper = document.createElement('div');
+    wrapper.className = 'ambient-stickers';
+    // Shuffle and pick 2 stickers per section
+    const shuffled = stickerHTMLs.sort(() => 0.5 - Math.random());
+    wrapper.innerHTML = shuffled[0] + shuffled[1];
+    
+    // Randomize their positions slightly differently per section
+    const icons = wrapper.querySelectorAll('.ambient-icon');
+    icons[0].style.top = (10 + Math.random() * 20) + '%';
+    icons[0].style.left = (5 + Math.random() * 15) + '%';
+    icons[1].style.top = (60 + Math.random() * 20) + '%';
+    icons[1].style.right = (5 + Math.random() * 15) + '%';
+    icons[1].style.left = 'auto';
+    
+    section.insertBefore(wrapper, section.firstChild);
+  });
+
+    const cursor = document.querySelector('.custom-cursor');
   const cursorText = document.querySelector('.cursor-text');
   
   if (cursor && window.innerWidth > 768) {
@@ -227,5 +277,178 @@ document.addEventListener("DOMContentLoaded", () => {
         start: "top 85%"
       }
     });
+  });
+});
+
+
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const showcaseGrid = document.getElementById("liveShowcaseGrid");
+  if (!showcaseGrid) return;
+
+  const reelIds = [
+    "1p7hinhRi32lkLywwOIq_7SViyTMnj6Mj",
+    "1Y0VMwQ5dRZpd60CN9WgrQGEk61La1BJC",
+    "1Wn38jk8pbjtwhMVBq_fWugufoKQvo8Fl",
+    "1sSLuiH9NgAz4PI5FRkDhAIvc7DPk36Fd",
+    "1ke11SYjIhAxbLUsFfi7HZL8QW8HRJNkq"
+  ];
+  
+  const reels = reelIds.map(id => {
+    const el = document.createElement("div");
+    el.className = "showcase-item";
+    el.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay" loading="lazy"></iframe>`;
+    return el;
+  });
+
+  const techCards = Array.from(document.querySelectorAll("#digital .tech-card")).map(card => {
+    const clone = card.cloneNode(true);
+    clone.classList.add("showcase-item");
+    clone.style.background = "transparent";
+    return clone;
+  });
+
+  let images = [];
+  try {
+    const res = await fetch("/api/showcase-images");
+    if (res.ok) {
+      const data = await res.json();
+      images = data.images.map(img => {
+        const el = document.createElement("div");
+        el.className = "showcase-item";
+        el.innerHTML = `<img src="${encodeURI(img)}" alt="Creative Work" loading="lazy">`;
+        return el;
+      });
+    }
+  } catch (e) {
+    console.error("Failed to load showcase images", e);
+  }
+
+  const items = [];
+  const maxLen = Math.max(images.length, reels.length, techCards.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (images[i]) items.push(images[i]);
+    if (reels.length > 0) items.push(reels[i % reels.length].cloneNode(true));
+    if (techCards.length > 0) items.push(techCards[i % techCards.length].cloneNode(true));
+  }
+
+  if (items.length === 0) return;
+
+  const VISIBLE_COUNT = 3;
+  let currentIndex = 0;
+
+  for (let i = 0; i < VISIBLE_COUNT; i++) {
+    const slot = document.createElement("div");
+    slot.className = "showcase-slot";
+    slot.style.width = "100%";
+    slot.style.height = "100%";
+    slot.style.aspectRatio = "4 / 5";
+    showcaseGrid.appendChild(slot);
+  }
+
+  const slots = showcaseGrid.children;
+
+  function cycleItems() {
+    for (let i = 0; i < VISIBLE_COUNT; i++) {
+      const nextItem = items[currentIndex].cloneNode(true);
+      currentIndex = (currentIndex + 1) % items.length;
+
+      if (slots[i].firstChild) {
+        slots[i].firstChild.classList.remove("active");
+        setTimeout(() => {
+          slots[i].innerHTML = "";
+          slots[i].appendChild(nextItem);
+          setTimeout(() => nextItem.classList.add("active"), 50);
+        }, 800);
+      } else {
+        slots[i].appendChild(nextItem);
+        setTimeout(() => nextItem.classList.add("active"), 50);
+      }
+    }
+  }
+
+  cycleItems();
+  setInterval(cycleItems, 6000);
+
+  async function initGridRotator(gridId, apiRoute, columns) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    
+    let images = [];
+    try {
+      const res = await fetch(apiRoute);
+      if (res.ok) {
+        const data = await res.json();
+        images = data.images.map(img => {
+          const el = document.createElement("div");
+          el.className = "showcase-item";
+          el.innerHTML = `<img src="${encodeURI(img)}" alt="Gallery Image" loading="lazy">`;
+          return el;
+        });
+      }
+    } catch (e) {
+      console.error("Failed to load images from " + apiRoute, e);
+    }
+    
+    if (images.length === 0) return;
+    
+    for (let i = 0; i < columns; i++) {
+      const slot = document.createElement("div");
+      slot.className = "showcase-slot";
+      slot.style.width = "100%";
+      slot.style.height = "100%";
+      slot.style.aspectRatio = "4 / 5";
+      grid.appendChild(slot);
+    }
+    
+    const slots = grid.children;
+    let currentIndex = 0;
+    
+    function cycleItems() {
+      for (let i = 0; i < columns; i++) {
+        const nextItem = images[currentIndex].cloneNode(true);
+        currentIndex = (currentIndex + 1) % images.length;
+        
+        if (slots[i].firstChild) {
+          slots[i].firstChild.classList.remove("active");
+          setTimeout(() => {
+            slots[i].innerHTML = "";
+            slots[i].appendChild(nextItem);
+            setTimeout(() => nextItem.classList.add("active"), 50);
+          }, 800);
+        } else {
+          slots[i].appendChild(nextItem);
+          setTimeout(() => nextItem.classList.add("active"), 50);
+        }
+      }
+    }
+    
+    cycleItems();
+    setInterval(cycleItems, 6000);
+  }
+
+  initGridRotator("liveStudioGrid", "/api/studio-images", 4);
+  initGridRotator("liveSocialGrid", "/api/social-images", 4);
+
+  // Scroll Reveal Observer
+  const revealElements = document.querySelectorAll(".section-title, .kicker, .project-card, .strategy-item, .tech-card, .about-statement, [data-reveal]");
+  revealElements.forEach(el => el.classList.add("reveal-element"));
+  
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("revealed");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    threshold: 0.15,
+    rootMargin: "0px 0px -50px 0px"
+  });
+
+  document.querySelectorAll(".reveal-element").forEach(el => {
+    revealObserver.observe(el);
   });
 });

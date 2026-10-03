@@ -281,6 +281,39 @@ var server = http.createServer(function(req, res) {
   // ── /api/drive/thumb?id=FILE_ID ────────────────────────────────────────
   // Proxies the image through the server using the authenticated Drive API.
   // Caches on disk so repeated requests are served instantly.
+  if (reqPath === '/api/showcase-images' || reqPath === '/api/studio-images' || reqPath === '/api/social-images') {
+    let targetFolder = 'showcase';
+    if (reqPath === '/api/studio-images') targetFolder = 'studio-images';
+    if (reqPath === '/api/social-images') targetFolder = 'social-media-designs';
+
+    const absPath = path.join(__dirname, targetFolder);
+    function getFilesRecursively(dir) {
+      let results = [];
+      try {
+        const list = fs.readdirSync(dir);
+        list.forEach(file => {
+          const filePath = path.join(dir, file);
+          const stat = fs.statSync(filePath);
+          if (stat && stat.isDirectory()) {
+            results = results.concat(getFilesRecursively(filePath));
+          } else {
+            results.push(filePath);
+          }
+        });
+      } catch (e) {}
+      return results;
+    }
+    
+    const allFiles = getFilesRecursively(absPath);
+    const images = allFiles
+      .filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f))
+      .map(f => '/' + targetFolder + '/' + path.relative(absPath, f).replace(/\\\\/g, '/'));
+      
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ images }));
+    return;
+  }
+  
   if (reqPath === '/api/drive/thumb') {
     var fileId = parsed.query && url.parse(req.url, true).query.id;
     if (!fileId) {
