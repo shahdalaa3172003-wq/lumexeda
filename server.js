@@ -281,10 +281,10 @@ var server = http.createServer(function(req, res) {
   // ── /api/drive/thumb?id=FILE_ID ────────────────────────────────────────
   // Proxies the image through the server using the authenticated Drive API.
   // Caches on disk so repeated requests are served instantly.
-  if (reqPath === '/api/showcase-images' || reqPath === '/api/studio-images' || reqPath === '/api/social-images') {
+  if (reqPath === '/api/showcase-images.json' || reqPath === '/api/studio-images.json' || reqPath === '/api/social-images.json') {
     let targetFolder = 'showcase';
-    if (reqPath === '/api/studio-images') targetFolder = 'studio-images';
-    if (reqPath === '/api/social-images') targetFolder = 'social-media-designs';
+    if (reqPath === '/api/studio-images.json') targetFolder = 'studio-images';
+    if (reqPath === '/api/social-images.json') targetFolder = 'social-media-designs';
 
     const absPath = path.join(__dirname, targetFolder);
     function getFilesRecursively(dir) {

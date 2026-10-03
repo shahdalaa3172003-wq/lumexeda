@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 
 console.log('Building production bundle for Vercel...');
@@ -7,48 +7,63 @@ console.log('Building production bundle for Vercel...');
 const distDir = path.join(__dirname, 'dist');
 if (!fs.existsSync(distDir)) fs.mkdirSync(distDir, { recursive: true });
 
-// Copy index.html
-fs.copyFileSync(path.join(__dirname, 'index.html'), path.join(distDir, 'index.html'));
-
-// Copy config.js if exists
-if (fs.existsSync(path.join(__dirname, 'config.js'))) {
-  fs.copyFileSync(path.join(__dirname, 'config.js'), path.join(distDir, 'config.js'));
-}
-
-// Copy screenshots
-['Screenshot 2026-10-01 222927.png', 'Screenshot 2026-10-01 223735.png', 'Screenshot 2026-10-01 223946.png'].forEach(file => {
+// Copy root files
+const filesToCopy = ['index.html', 'config.js', 'styles.css', 'scripts.js', 'hero-bg.jpeg', 'Screenshot 2026-10-01 222927.png', 'Screenshot 2026-10-01 223735.png', 'Screenshot 2026-10-01 223946.png'];
+filesToCopy.forEach(file => {
   if (fs.existsSync(path.join(__dirname, file))) {
     fs.copyFileSync(path.join(__dirname, file), path.join(distDir, file));
   }
 });
 
-// Helper function to recursively copy directories
-function copyDir(src, dest) {
+// Helper function to recursively copy directories and collect files
+function copyDirAndCollectImages(src, dest, publicBaseUrl) {
+  let images = [];
   if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
-  fs.readdirSync(src).forEach(file => {
-    const srcFile = path.join(src, file);
-    const destFile = path.join(dest, file);
-    if (fs.statSync(srcFile).isDirectory()) {
-      copyDir(srcFile, destFile);
-    } else {
-      fs.copyFileSync(srcFile, destFile);
-    }
-  });
+  try {
+    fs.readdirSync(src).forEach(file => {
+      const srcFile = path.join(src, file);
+      const destFile = path.join(dest, file);
+      if (fs.statSync(srcFile).isDirectory()) {
+        images = images.concat(copyDirAndCollectImages(srcFile, destFile, publicBaseUrl + '/' + file));
+      } else {
+        fs.copyFileSync(srcFile, destFile);
+        if (/\.(jpg|jpeg|png|gif|webp)$/i.test(file)) {
+          images.push(publicBaseUrl + '/' + file);
+        }
+      }
+    });
+  } catch (e) {}
+  return images;
 }
 
-// Copy posts-carousels
-if (fs.existsSync(path.join(__dirname, 'posts-carousels'))) {
-  copyDir(path.join(__dirname, 'posts-carousels'), path.join(distDir, 'posts-carousels'));
-}
+// Copy directories
+['posts-carousels', 'public'].forEach(dir => {
+  if (fs.existsSync(path.join(__dirname, dir))) {
+    copyDirAndCollectImages(path.join(__dirname, dir), path.join(distDir, dir), '/' + dir);
+  }
+});
 
-// Copy public if exists
-if (fs.existsSync(path.join(__dirname, 'public'))) {
-  copyDir(path.join(__dirname, 'public'), path.join(distDir, 'public'));
+// Generate APIs for showcase, studio, and social
+const apiDir = path.join(distDir, 'api');
+if (!fs.existsSync(apiDir)) fs.mkdirSync(apiDir, { recursive: true });
+
+const dynamicDirs = {
+  'showcase-images': 'showcase',
+  'studio-images': 'studio-images',
+  'social-images': 'social-media-designs'
+};
+
+for (const [apiEndpoint, folder]] of Object.entries(dynamicDirs)) {
+  const srcFolder = path.join(__dirname, folder);
+  const destFolder = path.join(distDir, folder);
+  let imagesList = [];
+  if (fs.existsSync(srcFolder)) {
+    imagesList = copyDirAndCollectImages(srcFolder, destFolder, '/' + folder);
+  }
+  
+  // Write the JSON response that the frontend expects
+  // Vercel with cleanUrls might serve .json files without extension, but we'll also write it exactly as the endpoint name just in case, or just modify scripts.js to fetch the .json!
+  fs.writeFileSync(path.join(apiDir, apiEndpoint + '.json'), JSON.stringify(imagesList));
 }
 
 console.log('✅ Build succeeded! All production assets copied to dist/');
-
-if (fs.existsSync(path.join(__dirname, 'styles.css'))) { fs.copyFileSync(path.join(__dirname, 'styles.css'), path.join(distDir, 'styles.css')); }
-if (fs.existsSync(path.join(__dirname, 'scripts.js'))) { fs.copyFileSync(path.join(__dirname, 'scripts.js'), path.join(distDir, 'scripts.js')); }
-
-if (fs.existsSync(path.join(__dirname, 'hero-bg.jpeg'))) { fs.copyFileSync(path.join(__dirname, 'hero-bg.jpeg'), path.join(distDir, 'hero-bg.jpeg')); }

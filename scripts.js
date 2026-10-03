@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let images = [];
   try {
-    const res = await fetch("/api/showcase-images");
+    const res = await fetch("/api/showcase-images.json");
     if (res.ok) {
       const data = await res.json();
       images = data.images.map(img => {
@@ -428,8 +428,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     setInterval(cycleItems, 6000);
   }
 
-  initGridRotator("liveStudioGrid", "/api/studio-images", 4);
-  initGridRotator("liveSocialGrid", "/api/social-images", 4);
+  initGridRotator("liveStudioGrid", "/api/studio-images.json", 4);
+  initGridRotator("liveSocialGrid", "/api/social-images.json", 4);
 
   // Scroll Reveal Observer
   const revealElements = document.querySelectorAll(".section-title, .kicker, .project-card, .strategy-item, .tech-card, .about-statement, [data-reveal]");
