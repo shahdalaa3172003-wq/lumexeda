@@ -1111,3 +1111,156 @@ img, iframe {
   25% { transform: translateY(-4px) rotate(-3deg); }
   75% { transform: translateY(-4px) rotate(3deg); }
 }
+
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  :root {
+    --pad: 32px;
+  }
+  .nav-links { gap: 32px; }
+  .hero { padding: 120px 0 80px; }
+  .tech-grid { grid-template-columns: repeat(2, 1fr); }
+  .project-card.large, .project-card.wide { width: 500px; }
+  .project-card.vertical { width: 300px; }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --pad: 20px;
+  }
+  
+  /* Navbar */
+  .main-nav { 
+    padding: 20px var(--pad); 
+    flex-direction: column;
+    gap: 16px;
+  }
+  .nav-links { 
+    gap: 20px; 
+  }
+  .nav-link {
+    font-size: 11px;
+  }
+  
+  /* Hero */
+  .hero {
+    min-height: 80vh;
+  }
+  .hero-title { 
+    font-size: clamp(48px, 12vw, 80px); 
+    margin-bottom: 24px;
+  }
+  .hero-eyebrow {
+    margin-bottom: 16px;
+  }
+  .hero-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-giant {
+    font-size: 18px;
+    padding: 16px 32px;
+  }
+  
+  /* Sections Padding */
+  .showreel, .selected-work, .content-strategy, .technology, .studio, .about-services, .final-cta { 
+    padding: 60px var(--pad); 
+  }
+  
+  /* Typography */
+  .section-title { font-size: clamp(28px, 6vw, 48px); margin-bottom: 32px; }
+  .huge-title { font-size: clamp(36px, 10vw, 60px); }
+  .cta-huge { font-size: clamp(32px, 8vw, 60px); margin-bottom: 32px; }
+  
+  /* Technology Grid */
+  .tech-grid { 
+    grid-template-columns: 1fr; 
+    gap: 24px;
+  }
+  
+  /* Strategy Archive */
+  .strategy-name { font-size: 20px; flex: auto; width: 100%; }
+  .strategy-item { 
+    position: relative;
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 8px; 
+    padding: 24px 0;
+  }
+  .strategy-arrow { 
+    position: absolute;
+    right: var(--pad);
+    margin-top: 4px;
+  }
+  
+  /* Horizontal scroll section fallback */
+  .horizontal-container {
+    height: auto;
+  }
+  .project-card, .more-card {
+    height: 400px !important;
+  }
+  
+  /* Studio */
+  .film-strip-wrapper { margin-top: 40px; }
+  .film-item { width: 300px; aspect-ratio: 16/9; }
+  
+  /* About Services */
+  .about-statement { margin-bottom: 60px; }
+  .about-statement h2 { font-size: 28px; margin-bottom: 16px; }
+  .about-statement p { font-size: 16px; }
+  
+  /* Footer */
+  .footer-top { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    margin-bottom: 40px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --pad: 16px;
+  }
+  
+  /* Navbar */
+  .main-nav { 
+    flex-direction: column; 
+    gap: 16px; 
+    padding: 16px var(--pad);
+  }
+  .nav-brand { font-size: 16px; }
+  .nav-links { 
+    gap: 16px; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+  }
+  
+  /* Hero */
+  .hero-title { font-size: clamp(40px, 12vw, 60px); }
+  .btn { padding: 12px 20px; font-size: 12px; }
+  
+  /* Tech visual */
+  .tech-visual { padding: 20px 20px 0; }
+  .tech-info { padding: 24px; }
+  .tech-info h3 { font-size: 20px; }
+  
+  /* Film item */
+  .film-item { width: 250px; }
+  
+  /* Services */
+  .services-wrapper { grid-template-columns: 1fr; gap: 40px; }
+  
+  .project-card, .more-card {
+    height: 300px !important;
+  }
+}
